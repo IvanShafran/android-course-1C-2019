@@ -2,21 +2,23 @@ package com.github.ivanshafran.camerasample;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
+
+import java.io.File;
+import java.util.UUID;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.ImageCapture;
-import androidx.camera.core.ImageProxy;
 import androidx.camera.view.CameraView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.LifecycleOwner;
 
-public class CameraActivity extends AppCompatActivity {
+public class CameraActivity extends AppCompatActivity implements ImageCapture.OnImageSavedListener {
 
     private static final int PERMISSION_REQUEST_CODE = 0;
 
@@ -70,30 +72,36 @@ public class CameraActivity extends AppCompatActivity {
 
     private void startCamera() {
         cameraView = findViewById(R.id.cameraView);
-        cameraView.bindToLifecycle((LifecycleOwner) this);
         cameraView.setCaptureMode(CameraView.CaptureMode.IMAGE);
+        cameraView.bindToLifecycle(this);
 
         takePictureButton = findViewById(R.id.takePictureButton);
         takePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                cameraView.takePicture(new ImageCapture.OnImageCapturedListener() {
-                    @Override
-                    public void onCaptureSuccess(final ImageProxy image, final int rotationDegrees) {
-                        super.onCaptureSuccess(image, rotationDegrees);
-                    }
-
-                    @Override
-                    public void onError(
-                            final ImageCapture.UseCaseError useCaseError,
-                            final String message,
-                            @Nullable final Throwable cause
-                    ) {
-                        super.onError(useCaseError, message, cause);
-                        finish();
-                    }
-                });
+                cameraView.takePicture(
+                        generatePictureFile(),
+                        AsyncTask.SERIAL_EXECUTOR,
+                        CameraActivity.this
+                );
             }
         });
+    }
+
+    @Override
+    public void onImageSaved(@NonNull final File file) {
+
+    }
+
+    @Override
+    public void onError(
+            @NonNull final ImageCapture.ImageCaptureError imageCaptureError,
+            @NonNull final String message,
+            @Nullable final Throwable cause) {
+        finish();
+    }
+
+    private File generatePictureFile() {
+        return new File(getFilesDir(), UUID.randomUUID().toString());
     }
 }
