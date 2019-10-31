@@ -5,7 +5,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-public class PersonListActivity extends AppCompatActivity {
+public class PersonListActivity extends AppCompatActivity implements PersonAdapter.Listener {
+
+    @Override
+    public void onPersonClick(final long id) {
+        startActivity(PersonDetailActivity.getIntent(this, id));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,5 +26,6 @@ public class PersonListActivity extends AppCompatActivity {
         final PersonAdapter adapter = new PersonAdapter();
         recyclerView.setAdapter(adapter);
         adapter.setPersonList(PersonRepository.getPersonList());
+        adapter.setListener(this);
     }
 }

@@ -11,7 +11,18 @@ import java.util.List;
 
 public class PersonAdapter extends RecyclerView.Adapter<PersonViewHolder> {
 
+    public interface Listener {
+
+        void onPersonClick(long id);
+
+    }
+
     private List<Person> personList = new ArrayList<>();
+    private Listener listener;
+
+    public void setListener(final Listener listener) {
+        this.listener = listener;
+    }
 
     public void setPersonList(final List<Person> personList) {
         this.personList = personList;
@@ -25,7 +36,7 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonViewHolder> {
                 R.layout.person_list_item, parent,
                 false
         );
-        return new PersonViewHolder(view);
+        return new PersonViewHolder(view, listener);
     }
 
     @Override

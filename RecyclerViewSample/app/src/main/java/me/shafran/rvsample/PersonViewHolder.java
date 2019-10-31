@@ -9,15 +9,20 @@ public class PersonViewHolder extends RecyclerView.ViewHolder {
 
     private TextView personNameTextView;
     private long id;
+    private PersonAdapter.Listener listener;
 
-    public PersonViewHolder(final View itemView) {
+    public PersonViewHolder(
+            final View itemView,
+            final PersonAdapter.Listener listener
+    ) {
         super(itemView);
         personNameTextView = itemView.findViewById(R.id.personNameTextView);
         personNameTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                final Context context = v.getContext();
-                context.startActivity(PersonDetailActivity.getIntent(context, id));
+                if (listener != null) {
+                    listener.onPersonClick(id);
+                }
             }
         });
     }
