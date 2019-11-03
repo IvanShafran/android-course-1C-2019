@@ -12,6 +12,8 @@ import androidx.fragment.app.Fragment;
 
 public class DetailFragment extends Fragment {
 
+    public static final String TAG = "DetailFragment";
+
     private static final String NAME_KEY = "NAME_KEY";
 
     public static Fragment newInstance(@NonNull final String name) {

@@ -3,7 +3,6 @@ package com.example.fragmentsample;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,27 +21,23 @@ public class DemoActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.demoMainContainer, ListFragment.newInstance())
+                    .replace(R.id.demoMainContainer, ListFragment.newInstance(), ListFragment.TAG)
                     .addToBackStack(null)
                     .commit();
         }
     }
 
     public void showDetailFragment(@NonNull final String name) {
-        final View detailView = findViewById(R.id.demoDetailContainer);
-        if (detailView == null) {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.demoMainContainer, DetailFragment.newInstance(name))
-                    .addToBackStack(null)
-                    .commit();
-        } else {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.demoDetailContainer, DetailFragment.newInstance(name))
-                    .addToBackStack(null)
-                    .commit();
+        if (getSupportFragmentManager().findFragmentByTag(DetailFragment.TAG) != null) {
+            // Если на экране уже есть фрагмент с деталями, то надо его убрать перед показом нового
+            getSupportFragmentManager().popBackStack();
         }
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.demoDetailContainer, DetailFragment.newInstance(name), DetailFragment.TAG)
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override
