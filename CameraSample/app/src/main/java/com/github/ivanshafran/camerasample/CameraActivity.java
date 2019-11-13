@@ -30,13 +30,11 @@ public class CameraActivity extends AppCompatActivity implements ImageCapture.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
-        if (savedInstanceState == null) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                    == PackageManager.PERMISSION_GRANTED) {
-                startCamera();
-            } else {
-                requestPermission();
-            }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED) {
+            startCamera();
+        } else {
+            requestPermission();
         }
     }
 
